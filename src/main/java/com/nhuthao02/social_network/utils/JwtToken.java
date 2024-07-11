@@ -1,5 +1,7 @@
 package com.nhuthao02.social_network.utils;
 
+import com.nhuthao02.social_network.exception.AppException;
+import com.nhuthao02.social_network.exception.ErrorCode;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -57,6 +59,16 @@ public class JwtToken {
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
         return signedJWT.verify(jwsVerifier) && expiryTime.after(new Date());
+    }
+
+    public String getUsernameFromToken(String token) throws ParseException, JOSEException {
+        if (!verifyToken(token)) {
+            throw new AppException(ErrorCode.INVALID_TOKEN);
+        }
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        // Lấy ra subject (userName) từ JWTClaimsSet
+        return signedJWT.getJWTClaimsSet().getSubject();
     }
 
 }

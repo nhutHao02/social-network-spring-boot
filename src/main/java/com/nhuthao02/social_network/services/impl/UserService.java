@@ -1,11 +1,16 @@
 package com.nhuthao02.social_network.services.impl;
 
-import com.nhuthao02.social_network.dtos.requests.UserCreationRequest;
-import com.nhuthao02.social_network.dtos.requests.UserLoginRequest;
+import com.nhuthao02.social_network.dtos.requests.user.UserCreationRequest;
+import com.nhuthao02.social_network.dtos.requests.user.UserLoginRequest;
+import com.nhuthao02.social_network.dtos.requests.user.UserUpdateRequest;
+import com.nhuthao02.social_network.dtos.responses.user.UserInfoResponse;
+import com.nhuthao02.social_network.entities.Location;
 import com.nhuthao02.social_network.entities.User;
 import com.nhuthao02.social_network.exception.AppException;
 import com.nhuthao02.social_network.exception.ErrorCode;
+import com.nhuthao02.social_network.mapper.LocationMapper;
 import com.nhuthao02.social_network.mapper.UserMapper;
+import com.nhuthao02.social_network.repositories.LocationRepository;
 import com.nhuthao02.social_network.repositories.UserRepository;
 import com.nhuthao02.social_network.services.IUserService;
 import com.nhuthao02.social_network.utils.JwtToken;
@@ -25,7 +30,13 @@ public class UserService implements IUserService {
     UserRepository userRepository;
 
     @Autowired
+    LocationRepository locationRepository;
+
+    @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    LocationMapper locationMapper;
 
     @Autowired
     JwtToken jwtToken;
@@ -37,8 +48,12 @@ public class UserService implements IUserService {
         User user = userMapper.userCreationToUser(request);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        userRepository.save(user);
 
+        Location location = Location.builder().build();
+        locationRepository.save(location);
+        user.setLocation(location);
+
+        userRepository.save(user);
         return user.getId();
     }
 
@@ -46,13 +61,39 @@ public class UserService implements IUserService {
     public String login(UserLoginRequest request) {
 
         Optional<User> userOptional = userRepository.findByUserName(request.getUserName());
-         if(userOptional.isPresent())  {
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-            if(passwordEncoder.matches(request.getPassword(),user.getPassword())){
+            if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                 return jwtToken.generateToken(request.getUserName());
             }
-         }
+        }
         return null;
     }
+
+    @Override
+    public boolean update(String userName, UserUpdateRequest request) {
+        User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        userMapper.userResponseToUser(user, request);
+
+        locationMapper.updateLocation(user.getLocation(), request.getLocationRequest());
+
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public UserInfoResponse getInfoById(String id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        return userMapper.userToUserInfoResponse(user);
+    }
+
+    @Override
+    public UserInfoResponse getInfo(String userName) {
+        User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        return userMapper.userToUserInfoResponse(user);
+    }
+
+
 }
