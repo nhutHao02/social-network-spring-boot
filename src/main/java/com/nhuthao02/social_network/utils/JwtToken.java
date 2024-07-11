@@ -8,7 +8,6 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +17,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+
 @Component
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -27,7 +27,7 @@ public class JwtToken {
     String issuer;
 
     @Value("${jwt.secret}")
-    String SECRET_KEY;
+    String secretKey;
 
     public String generateToken(String userName) {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
@@ -44,31 +44,41 @@ public class JwtToken {
         JWSObject jwsObject = new JWSObject(jwsHeader, payload);
 
         try {
-            jwsObject.sign(new MACSigner(SECRET_KEY.getBytes()));
+            jwsObject.sign(new MACSigner(secretKey.getBytes()));
             return jwsObject.serialize();
         } catch (JOSEException e) {
-            throw new RuntimeException(e);
+            throw new AppException(ErrorCode.GENERATE_TOKEN_FAILURE);
         }
     }
 
-    public boolean verifyToken(String token) throws JOSEException, ParseException {
-        JWSVerifier jwsVerifier = new MACVerifier(SECRET_KEY.getBytes());
+    public boolean verifyToken(String token) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            JWSVerifier jwsVerifier = new MACVerifier(secretKey.getBytes());
 
-        SignedJWT signedJWT = SignedJWT.parse(token);
+            if (!signedJWT.verify(jwsVerifier)) {
+                return false;
+            }
 
-        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            Date now = new Date();
 
-        return signedJWT.verify(jwsVerifier) && expiryTime.after(new Date());
-    }
-
-    public String getUsernameFromToken(String token) throws ParseException, JOSEException {
-        if (!verifyToken(token)) {
+            return expiryTime != null && expiryTime.after(now);
+        } catch (ParseException | JOSEException e) {
             throw new AppException(ErrorCode.INVALID_TOKEN);
         }
-        SignedJWT signedJWT = SignedJWT.parse(token);
-
-        // Lấy ra subject (userName) từ JWTClaimsSet
-        return signedJWT.getJWTClaimsSet().getSubject();
     }
 
+    public String getUsernameFromToken(String token) {
+        try {
+            if (!verifyToken(token)) {
+                throw new AppException(ErrorCode.INVALID_TOKEN);
+            }
+
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            return signedJWT.getJWTClaimsSet().getSubject();
+        } catch (ParseException e) {
+            throw new AppException(ErrorCode.INVALID_TOKEN);
+        }
+    }
 }

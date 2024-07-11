@@ -17,18 +17,18 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableWebSecurity
 public class SecurityConfig {
     @Value("${jwt.secret}")
-    String SECRET_KEY;
+    String secretKey;
 
-    private final  String[] PUBLIC_ENDPOINT= {
+    private final String[] publicEndpoint = {
             "/api/v1/auth/log-in",
-           "/api/v1/auth/sign-up"
+            "/api/v1/auth/sign-up"
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(PUBLIC_ENDPOINT).permitAll()
-                .anyRequest().authenticated()
+                request.requestMatchers(publicEndpoint).permitAll()
+                        .anyRequest().authenticated()
         );
         httpSecurity.oauth2ResourceServer(oauth2 ->
                 oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
@@ -39,7 +39,7 @@ public class SecurityConfig {
 
     @Bean
     JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET_KEY.getBytes(), "HS512");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HS512");
         return NimbusJwtDecoder
                 .withSecretKey(secretKeySpec)
                 .macAlgorithm(MacAlgorithm.HS512)

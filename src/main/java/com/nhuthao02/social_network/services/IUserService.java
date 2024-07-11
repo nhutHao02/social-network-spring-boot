@@ -6,7 +6,7 @@ import com.nhuthao02.social_network.dtos.requests.user.UserUpdateRequest;
 import com.nhuthao02.social_network.dtos.responses.user.UserInfoResponse;
 
 public interface IUserService {
-    String createUser(UserCreationRequest request) throws Exception;
+    String createUser(UserCreationRequest request);
 
     String login(UserLoginRequest request);
 

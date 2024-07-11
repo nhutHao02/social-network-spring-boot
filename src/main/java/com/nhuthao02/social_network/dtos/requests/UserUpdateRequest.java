@@ -1,4 +1,4 @@
-package com.nhuthao02.social_network.dtos.requests.user;
+package com.nhuthao02.social_network.dtos.requests;
 
 import com.nhuthao02.social_network.dtos.requests.location.LocationRequest;
 import lombok.*;

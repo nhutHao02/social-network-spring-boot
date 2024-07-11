@@ -11,14 +11,11 @@ import com.nhuthao02.social_network.services.IUserService;
 import com.nhuthao02.social_network.utils.ApiResponse;
 import com.nhuthao02.social_network.utils.JwtToken;
 import com.nhuthao02.social_network.utils.ResponseCode;
-import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.ParseException;
 
 @RestController
 @RequestMapping(path = "/api/v1/auth")
@@ -30,7 +27,7 @@ public class AuthencationController {
     JwtToken jwtToken;
 
     @PostMapping(value = "/sign-up")
-    public ResponseEntity<ApiResponse> create(@RequestBody UserCreationRequest request) throws Exception {
+    public ResponseEntity<ApiResponse> create(@RequestBody UserCreationRequest request) {
         String result = userService.createUser(request);
         if (!result.isEmpty())
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
@@ -69,12 +66,9 @@ public class AuthencationController {
     public ResponseEntity<ApiResponse> create(@PathVariable String userName, @RequestBody UserUpdateRequest request, HttpServletRequest servletRequest) {
 
         String token = getBearToken(servletRequest);
-        String name = null;
-        try {
-            name = jwtToken.getUsernameFromToken(token);
-        } catch (ParseException | JOSEException e) {
-            throw new AppException(ErrorCode.INVALID_TOKEN);
-        }
+
+        String name = jwtToken.getUsernameFromToken(token);
+
 
         if (!name.equals(userName)) {
             throw new AppException(ErrorCode.INVALID_USER);
@@ -94,13 +88,9 @@ public class AuthencationController {
     }
 
     @GetMapping(value = "info/{id}")
-    public ResponseEntity<ApiResponse> getInfoById(@PathVariable String id, HttpServletRequest servletRequest) throws RuntimeException {
+    public ResponseEntity<ApiResponse> getInfoById(@PathVariable String id, HttpServletRequest servletRequest) {
         String token = getBearToken(servletRequest);
-        try {
-            if (!jwtToken.verifyToken(token)) throw new AppException(ErrorCode.INVALID_TOKEN);
-        } catch (JOSEException | ParseException e) {
-            throw new RuntimeException(e);
-        }
+        if (!jwtToken.verifyToken(token)) throw new AppException(ErrorCode.INVALID_TOKEN);
         UserInfoResponse userInfoResponse = userService.getInfoById(id);
 
         return (userInfoResponse != null) ?
@@ -118,19 +108,12 @@ public class AuthencationController {
     }
 
     @GetMapping(value = "info")
-    public ResponseEntity<ApiResponse> getInfoById(HttpServletRequest servletRequest) throws RuntimeException {
+    public ResponseEntity<ApiResponse> getInfoById(HttpServletRequest servletRequest) {
         String token = getBearToken(servletRequest);
-        try {
-            if (!jwtToken.verifyToken(token)) throw new AppException(ErrorCode.INVALID_TOKEN);
-        } catch (JOSEException | ParseException e) {
-            throw new RuntimeException(e);
-        }
-        String userName = null;
-        try {
-            userName = jwtToken.getUsernameFromToken(token);
-        } catch (ParseException | JOSEException e) {
-            throw new RuntimeException(e);
-        }
+
+        if (!jwtToken.verifyToken(token)) throw new AppException(ErrorCode.INVALID_TOKEN);
+
+        String userName = jwtToken.getUsernameFromToken(token);
         UserInfoResponse userInfoResponse = userService.getInfo(userName);
 
         return (userInfoResponse != null) ?

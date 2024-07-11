@@ -15,7 +15,7 @@ public enum ErrorCode {
     USER_NOT_FOUND("003", "User not found"),
     INVALID_TOKEN("004", "Invalid token"),
     INVALID_USER("005", "Invalid user"),
-//    USER_NOT_FOUND("003", "User not found"),
+    GENERATE_TOKEN_FAILURE("006", "Generate token failure"),
 //    USER_NOT_FOUND("003", "User not found"),
     ;
     final String code;

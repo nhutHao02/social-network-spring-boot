@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PACKAGE)
+
 public class UserCreationRequest {
     String userName;
     String password;
