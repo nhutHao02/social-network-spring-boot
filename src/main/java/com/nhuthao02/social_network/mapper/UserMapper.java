@@ -20,5 +20,6 @@ public interface UserMapper {
     void userResponseToUser(@MappingTarget User user, UserUpdateRequest request);
 
     @Mapping(source = "id", target = "id")
+    @Mapping(source = "createAt", target = "createAt")
     UserInfoResponse userToUserInfoResponse(User user);
 }
