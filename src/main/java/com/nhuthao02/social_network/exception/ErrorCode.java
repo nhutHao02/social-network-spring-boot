@@ -16,6 +16,7 @@ public enum ErrorCode {
     INVALID_TOKEN("004", "Invalid token"),
     INVALID_USER("005", "Invalid user"),
     GENERATE_TOKEN_FAILURE("006", "Generate token failure"),
+    TWEET_NOT_FOUND("007", "Tweet not found"),
 //    USER_NOT_FOUND("003", "User not found"),
     ;
     final String code;

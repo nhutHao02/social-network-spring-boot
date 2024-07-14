@@ -20,7 +20,7 @@ public class Tweet extends BaseEntity {
     String urlVideo;
 
     //relationship
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tweet_user_id")
     User user;
 

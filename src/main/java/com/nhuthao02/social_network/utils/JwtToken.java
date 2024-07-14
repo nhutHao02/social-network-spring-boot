@@ -7,6 +7,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,7 +37,7 @@ public class JwtToken {
                 .subject(userName)
                 .issuer(issuer)
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()))
                 .build();
 
         Payload payload = new Payload((jwtClaimsSet.toJSONObject()));
@@ -80,5 +81,14 @@ public class JwtToken {
         } catch (ParseException e) {
             throw new AppException(ErrorCode.INVALID_TOKEN);
         }
+    }
+
+    public String getBearToken(HttpServletRequest servletRequest) {
+        String authorizationHeader = servletRequest.getHeader("Authorization");
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new AppException(ErrorCode.INVALID_TOKEN);
+        }
+        return authorizationHeader.substring(7);
     }
 }
