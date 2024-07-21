@@ -20,7 +20,7 @@ public enum ErrorCode {
     TWEET_SAVED_NOT_FOUND("008", "TweetSaved not found"),
     TWEET_LOVED_NOT_FOUND("009", "TweetLoved not found"),
     TWEET_REPOSTED_NOT_FOUND("010", "TweetReposted not found"),
-//    USER_NOT_FOUND("003", "User not found"),
+    COMMENT_NOT_FOUND("011", "Comment not found"),
     ;
     final String code;
     final String message;
