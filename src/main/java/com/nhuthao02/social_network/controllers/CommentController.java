@@ -88,4 +88,29 @@ public class CommentController {
                 ;
     }
 
+    @GetMapping(value = "/get-comments/{tweetId}")
+    public ResponseEntity<ApiResponse> getComments(@PathVariable String tweetId,
+                                                   @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                   @RequestParam(name = "limit", defaultValue = "10") Integer limit,
+                                                   HttpServletRequest servletRequest) {
+        String token = jwtToken.getBearToken(servletRequest);
+
+        if (!jwtToken.verifyToken(token)) throw new AppException(ErrorCode.INVALID_TOKEN);
+
+        var rs = service.getComments(tweetId, page, limit);
+
+        return !rs.isEmpty() ?
+                ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
+                        .code(ResponseCode.SUCCESS.getCode())
+                        .message(ResponseCode.SUCCESS.getMessage())
+                        .data(rs)
+                        .build())
+                :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder()
+                        .code(ResponseCode.FAILURE.getCode())
+                        .message(ResponseCode.FAILURE.getMessage())
+                        .build())
+                ;
+    }
+
 }

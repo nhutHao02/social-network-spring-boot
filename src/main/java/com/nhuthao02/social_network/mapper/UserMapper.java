@@ -4,6 +4,7 @@ import com.nhuthao02.social_network.dtos.requests.user.UserCreationRequest;
 import com.nhuthao02.social_network.dtos.requests.user.UserUpdateRequest;
 import com.nhuthao02.social_network.dtos.responses.follow.FollowResponse;
 import com.nhuthao02.social_network.dtos.responses.user.UserInfoResponse;
+import com.nhuthao02.social_network.dtos.responses.user.UserTweetResponse;
 import com.nhuthao02.social_network.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -29,4 +30,6 @@ public interface UserMapper {
     @Mapping(source = "email", target = "email")
     @Mapping(source = "urlAvt", target = "urlAvt")
     FollowResponse userToFollowResponse(User user);
+
+    UserTweetResponse userToUserTweetResponse(User user);
 }
