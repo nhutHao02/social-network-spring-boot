@@ -21,6 +21,10 @@ public enum ErrorCode {
     TWEET_LOVED_NOT_FOUND("009", "TweetLoved not found"),
     TWEET_REPOSTED_NOT_FOUND("010", "TweetReposted not found"),
     COMMENT_NOT_FOUND("011", "Comment not found"),
+    UNFOLLOW_FAILURE("012", "UnFollow failure."),
+    FOLLOWER_NOT_FOUND("013", "Follower not found."),
+    FOLLOWING_NOT_FOUND("014", "Following not found."),
+
     ;
     final String code;
     final String message;

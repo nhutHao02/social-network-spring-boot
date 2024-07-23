@@ -1,0 +1,17 @@
+package com.nhuthao02.social_network.dtos.responses.follow;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class FollowResponse {
+    String userId;
+    String fullName;
+    String email;
+    String urlAvt;
+}
