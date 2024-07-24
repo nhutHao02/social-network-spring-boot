@@ -8,15 +8,15 @@ import com.nhuthao02.social_network.entities.User;
 import com.nhuthao02.social_network.exception.AppException;
 import com.nhuthao02.social_network.exception.ErrorCode;
 import com.nhuthao02.social_network.mapper.TweetMapper;
-import com.nhuthao02.social_network.repositories.TweetRepository;
-import com.nhuthao02.social_network.repositories.UserRepository;
+import com.nhuthao02.social_network.mapper.UserMapper;
+import com.nhuthao02.social_network.repositories.*;
 import com.nhuthao02.social_network.services.ITweetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,10 +25,25 @@ public class TweetService implements ITweetService {
     TweetRepository repository;
 
     @Autowired
+    SavedTweetRepository savedTweetRepository;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
+    LoveTweetRepository loveTweetRepository;
+
+    @Autowired
+    RepostTweetRepository repostTweetRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
     TweetMapper tweetMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public boolean addTweet(PostTweetRequest request) {
@@ -57,8 +72,26 @@ public class TweetService implements ITweetService {
 
     @Override
     public List<TweetResponse> getTweets(Integer page, Integer limit) {
+        List<TweetResponse> listRs = new ArrayList<>();
         Page<Tweet> tweets = repository.findAll(PageRequest.of(page, limit));
-        return tweetMapper.listToTweets(tweets.getContent());
+        for (Tweet tweet :
+                tweets.getContent()) {
+            // map tweet to tweetResponse
+            TweetResponse tweetResponse = tweetMapper.tweetToTweetResponse(tweet);
+            // map user to userResponse
+            tweetResponse.setUser(userMapper.userToUserTweetResponse(tweet.getUser()));
+            // count LovedTweet
+            tweetResponse.setTotalLove(loveTweetRepository.countByTweet(tweet));
+            // count Saved
+            tweetResponse.setTotalSaved(savedTweetRepository.countByTweet(tweet));
+            // count Repost
+            tweetResponse.setTotalRepost(repostTweetRepository.countByTweet(tweet));
+            // count Comment
+            tweetResponse.setTotalComment(commentRepository.countByTweet(tweet));
+
+            listRs.add(tweetResponse);
+        }
+        return listRs;
     }
 
 

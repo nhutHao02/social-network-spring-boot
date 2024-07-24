@@ -18,9 +18,9 @@ public class TweetResponse {
     String urlImage;
     String urlVideo;
     UserTweetResponse user;
-    Integer totalSaved;
-    Integer totalRepost;
-    Integer totalLove;
-    Integer totalComment;
+    Long totalSaved;
+    Long totalRepost;
+    Long totalLove;
+    Long totalComment;
     Date createAt;
 }

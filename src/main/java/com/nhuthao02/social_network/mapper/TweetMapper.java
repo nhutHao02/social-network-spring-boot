@@ -18,4 +18,6 @@ public interface TweetMapper {
 
     @Mapping(source = "user", target = "user")
     List<TweetResponse> listToTweets(List<Tweet> tweets);
+
+    TweetResponse tweetToTweetResponse(Tweet tweet);
 }

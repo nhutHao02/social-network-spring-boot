@@ -6,16 +6,18 @@ import com.nhuthao02.social_network.entities.Tweet;
 import com.nhuthao02.social_network.entities.User;
 import com.nhuthao02.social_network.exception.AppException;
 import com.nhuthao02.social_network.exception.ErrorCode;
-import com.nhuthao02.social_network.repositories.LoveTweetRepository;
-import com.nhuthao02.social_network.repositories.TweetRepository;
-import com.nhuthao02.social_network.repositories.UserRepository;
+import com.nhuthao02.social_network.mapper.TweetMapper;
+import com.nhuthao02.social_network.mapper.UserMapper;
+import com.nhuthao02.social_network.repositories.*;
 import com.nhuthao02.social_network.services.ILoveTweetService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +31,22 @@ public class LoveTweetService implements ILoveTweetService {
     TweetRepository tweetRepository;
 
     @Autowired
+    SavedTweetRepository savedTweetRepository;
+
+    @Autowired
+    RepostTweetRepository repostTweetRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
     LoveTweetRepository repository;
+
+    @Autowired
+    TweetMapper tweetMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public boolean loveTweet(String userName, String tweetId) {
@@ -53,10 +70,28 @@ public class LoveTweetService implements ILoveTweetService {
 
     @Override
     public List<TweetResponse> getTweetLoved(String userName, Integer page, Integer limit) {
-//        User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-//        Page<LoveTweet> loveTweets = repository.findAll(PageRequest.of(page, limit));
-//        return tweetMapper.listToTweets(tweets.getContent());
-        return null;
+        List<TweetResponse> listRs = new ArrayList<>();
+        // get all saved tweet
+        User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Page<LoveTweet> loveTweets = repository.findAllByUser(user, PageRequest.of(page, limit));
+        for (LoveTweet loveTweet :
+                loveTweets.getContent()) {
+            // map tweet to tweetResponse
+            TweetResponse tweetResponse = tweetMapper.tweetToTweetResponse(loveTweet.getTweet());
+            // map user to userResponse
+            tweetResponse.setUser(userMapper.userToUserTweetResponse(loveTweet.getTweet().getUser()));
+            // count LovedTweet
+            tweetResponse.setTotalLove(repository.countByTweet(loveTweet.getTweet()));
+            // count Saved
+            tweetResponse.setTotalSaved(savedTweetRepository.countByTweet(loveTweet.getTweet()));
+            // count Repost
+            tweetResponse.setTotalRepost(repostTweetRepository.countByTweet(loveTweet.getTweet()));
+            // count Comment
+            tweetResponse.setTotalComment(commentRepository.countByTweet(loveTweet.getTweet()));
+
+            listRs.add(tweetResponse);
+        }
+        return listRs;
     }
 
 }

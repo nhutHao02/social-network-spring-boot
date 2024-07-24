@@ -68,10 +68,10 @@ public class TweetLovedController {
     }
 
     @GetMapping(value = "/get-tweet-loved")
-    public ResponseEntity<ApiResponse> deleteTweetLoved(@RequestParam(name = "userName") String userName,
-                                                        @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                        @RequestParam(name = "limit", defaultValue = "10") Integer limit,
-                                                        HttpServletRequest servletRequest) {
+    public ResponseEntity<ApiResponse> getTweetLoved(@RequestParam(name = "userName") String userName,
+                                                     @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                     @RequestParam(name = "limit", defaultValue = "10") Integer limit,
+                                                     HttpServletRequest servletRequest) {
         String token = jwtToken.getBearToken(servletRequest);
 
         String name = jwtToken.getUsernameFromToken(token);
@@ -81,6 +81,7 @@ public class TweetLovedController {
                 ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
                         .code(ResponseCode.SUCCESS.getCode())
                         .message(ResponseCode.SUCCESS.getMessage())
+                        .data(tweetResponse)
                         .build())
                 :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder()
