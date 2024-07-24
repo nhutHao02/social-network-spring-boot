@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface SavedTweetRepository extends JpaRepository<SaveTweet, String> {
     Optional<SaveTweet> findSaveTweetByUserAndTweet(User user, Tweet tweet);
+
+    Long countByTweet(Tweet tweet);
 }

@@ -9,4 +9,6 @@ import java.util.Optional;
 
 public interface RepostTweetRepository extends JpaRepository<RepostTweet, String> {
     Optional<RepostTweet> findRepostTweetByUserAndTweet(User user, Tweet tweet);
+
+    Long countByTweet(Tweet tweet);
 }
