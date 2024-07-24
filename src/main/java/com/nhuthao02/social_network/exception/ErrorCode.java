@@ -16,7 +16,15 @@ public enum ErrorCode {
     INVALID_TOKEN("004", "Invalid token"),
     INVALID_USER("005", "Invalid user"),
     GENERATE_TOKEN_FAILURE("006", "Generate token failure"),
-//    USER_NOT_FOUND("003", "User not found"),
+    TWEET_NOT_FOUND("007", "Tweet not found"),
+    TWEET_SAVED_NOT_FOUND("008", "TweetSaved not found"),
+    TWEET_LOVED_NOT_FOUND("009", "TweetLoved not found"),
+    TWEET_REPOSTED_NOT_FOUND("010", "TweetReposted not found"),
+    COMMENT_NOT_FOUND("011", "Comment not found"),
+    UNFOLLOW_FAILURE("012", "UnFollow failure."),
+    FOLLOWER_NOT_FOUND("013", "Follower not found."),
+    FOLLOWING_NOT_FOUND("014", "Following not found."),
+
     ;
     final String code;
     final String message;

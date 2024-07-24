@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PACKAGE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class LocationResponse {
     String city;
     String district;

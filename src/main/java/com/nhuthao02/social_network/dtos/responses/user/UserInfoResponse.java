@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PACKAGE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserInfoResponse {
     String id;
     String userName;

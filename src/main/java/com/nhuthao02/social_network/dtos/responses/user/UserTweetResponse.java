@@ -1,7 +1,8 @@
-package com.nhuthao02.social_network.dtos.requests.user;
+package com.nhuthao02.social_network.dtos.responses.user;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 
 @Getter
 @Setter
@@ -9,7 +10,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserLoginRequest {
-    String userName;
-    String password;
+public class UserTweetResponse {
+    String id;
+    String fullName;
+    String urlAvt;
 }

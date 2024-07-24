@@ -12,11 +12,14 @@ import com.nhuthao02.social_network.utils.ApiResponse;
 import com.nhuthao02.social_network.utils.JwtToken;
 import com.nhuthao02.social_network.utils.ResponseCode;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @RestController
 @RequestMapping(path = "/api/v1/auth")
 public class AuthencationController {
@@ -48,7 +51,7 @@ public class AuthencationController {
     }
 
     @PostMapping(value = "/log-in")
-    public ResponseEntity<ApiResponse> create(@RequestBody UserLoginRequest request) {
+    public ResponseEntity<ApiResponse> login(@RequestBody UserLoginRequest request) {
         String token = userService.login(request);
         if (!token.isEmpty())
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
@@ -63,9 +66,9 @@ public class AuthencationController {
     }
 
     @PutMapping(value = "/update/{userName}")
-    public ResponseEntity<ApiResponse> create(@PathVariable String userName, @RequestBody UserUpdateRequest request, HttpServletRequest servletRequest) {
+    public ResponseEntity<ApiResponse> update(@PathVariable String userName, @RequestBody UserUpdateRequest request, HttpServletRequest servletRequest) {
 
-        String token = getBearToken(servletRequest);
+        String token = jwtToken.getBearToken(servletRequest);
 
         String name = jwtToken.getUsernameFromToken(token);
 
@@ -89,7 +92,7 @@ public class AuthencationController {
 
     @GetMapping(value = "info/{id}")
     public ResponseEntity<ApiResponse> getInfoById(@PathVariable String id, HttpServletRequest servletRequest) {
-        String token = getBearToken(servletRequest);
+        String token = jwtToken.getBearToken(servletRequest);
         if (!jwtToken.verifyToken(token)) throw new AppException(ErrorCode.INVALID_TOKEN);
         UserInfoResponse userInfoResponse = userService.getInfoById(id);
 
@@ -109,7 +112,7 @@ public class AuthencationController {
 
     @GetMapping(value = "info")
     public ResponseEntity<ApiResponse> getInfoById(HttpServletRequest servletRequest) {
-        String token = getBearToken(servletRequest);
+        String token = jwtToken.getBearToken(servletRequest);
 
         if (!jwtToken.verifyToken(token)) throw new AppException(ErrorCode.INVALID_TOKEN);
 
@@ -129,14 +132,4 @@ public class AuthencationController {
                         .build());
 
     }
-
-    private String getBearToken(HttpServletRequest servletRequest) {
-        String authorizationHeader = servletRequest.getHeader("Authorization");
-
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new AppException(ErrorCode.INVALID_TOKEN);
-        }
-        return authorizationHeader.substring(7);
-    }
-
 }

@@ -1,4 +1,4 @@
-package com.nhuthao02.social_network.dtos.requests.user;
+package com.nhuthao02.social_network.dtos.responses.follow;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,7 +9,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserLoginRequest {
-    String userName;
-    String password;
+public class FollowResponse {
+    String userId;
+    String fullName;
+    String email;
+    String urlAvt;
 }
