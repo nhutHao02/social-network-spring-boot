@@ -1,20 +1,25 @@
 package com.nhuthao02.social_network.services.impl;
 
+import com.nhuthao02.social_network.dtos.responses.tweet.TweetResponse;
 import com.nhuthao02.social_network.entities.LoveTweet;
 import com.nhuthao02.social_network.entities.RepostTweet;
 import com.nhuthao02.social_network.entities.Tweet;
 import com.nhuthao02.social_network.entities.User;
 import com.nhuthao02.social_network.exception.AppException;
 import com.nhuthao02.social_network.exception.ErrorCode;
-import com.nhuthao02.social_network.repositories.RepostTweetRepository;
-import com.nhuthao02.social_network.repositories.TweetRepository;
-import com.nhuthao02.social_network.repositories.UserRepository;
+import com.nhuthao02.social_network.mapper.TweetMapper;
+import com.nhuthao02.social_network.mapper.UserMapper;
+import com.nhuthao02.social_network.repositories.*;
 import com.nhuthao02.social_network.services.IRepostTweetService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,10 +29,25 @@ public class RepostTweetService implements IRepostTweetService {
     RepostTweetRepository repository;
 
     @Autowired
+    LoveTweetRepository loveTweetRepository;
+
+    @Autowired
+    SavedTweetRepository savedTweetRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
     TweetRepository tweetRepository;
+
+    @Autowired
+    TweetMapper tweetMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public boolean repost(String userName, String tweetId) {
@@ -47,5 +67,31 @@ public class RepostTweetService implements IRepostTweetService {
         }
         repository.delete(repostTweet.get());
         return true;
+    }
+
+    @Override
+    public List<TweetResponse> getRepostTweet(String userName, Integer page, Integer limit) {
+        List<TweetResponse> listRs = new ArrayList<>();
+        // get all saved tweet
+        User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Page<RepostTweet> repostTweets = repository.findAllByUser(user, PageRequest.of(page, limit));
+        for (RepostTweet repostTweet :
+                repostTweets.getContent()) {
+            // map tweet to tweetResponse
+            TweetResponse tweetResponse = tweetMapper.tweetToTweetResponse(repostTweet.getTweet());
+            // map user to userResponse
+            tweetResponse.setUser(userMapper.userToUserTweetResponse(repostTweet.getTweet().getUser()));
+            // count LovedTweet
+            tweetResponse.setTotalLove(loveTweetRepository.countByTweet(repostTweet.getTweet()));
+            // count Saved
+            tweetResponse.setTotalSaved(savedTweetRepository.countByTweet(repostTweet.getTweet()));
+            // count Repost
+            tweetResponse.setTotalRepost(repository.countByTweet(repostTweet.getTweet()));
+            // count Comment
+            tweetResponse.setTotalComment(commentRepository.countByTweet(repostTweet.getTweet()));
+
+            listRs.add(tweetResponse);
+        }
+        return listRs;
     }
 }
