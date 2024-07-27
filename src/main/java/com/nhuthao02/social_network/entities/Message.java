@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Message extends BaseEntity {
     String uuidSender;
-    String uuidReciver;
+    String uuidReceiver;
     String content;
     String urlImage;
     String urlVideo;

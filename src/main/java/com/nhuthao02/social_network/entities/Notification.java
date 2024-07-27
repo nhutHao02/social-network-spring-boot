@@ -17,10 +17,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Notification extends BaseEntity {
     String content;
-    String uuidSender;
+    String uuidReceiver;
 
     //relationship
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "notification_user_id")
     User user;
 }
