@@ -24,6 +24,7 @@ public enum ErrorCode {
     UNFOLLOW_FAILURE("012", "UnFollow failure."),
     FOLLOWER_NOT_FOUND("013", "Follower not found."),
     FOLLOWING_NOT_FOUND("014", "Following not found."),
+    MESSAGE_NOT_FOUND("014", "Message not found."),
 
     ;
     final String code;
