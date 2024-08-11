@@ -10,7 +10,6 @@ import com.nhuthao02.social_network.utils.ResponseCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +20,16 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/v1/tweet-love")
 public class TweetLovedController {
-    @Autowired
+    final
     JwtToken jwtToken;
 
-    @Autowired
+    final
     ILoveTweetService loveTweetService;
+
+    public TweetLovedController(JwtToken jwtToken, ILoveTweetService loveTweetService) {
+        this.jwtToken = jwtToken;
+        this.loveTweetService = loveTweetService;
+    }
 
     @PostMapping(value = "/love")
     public ResponseEntity<ApiResponse> love(@RequestParam(name = "userName") String userName, @RequestParam(name = "tweetId") String tweetId, HttpServletRequest servletRequest) {

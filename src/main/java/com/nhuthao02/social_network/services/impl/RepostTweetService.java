@@ -13,7 +13,6 @@ import com.nhuthao02.social_network.repositories.*;
 import com.nhuthao02.social_network.services.IRepostTweetService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,29 +24,40 @@ import java.util.Optional;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RepostTweetService implements IRepostTweetService {
-    @Autowired
+    final
     RepostTweetRepository repository;
 
-    @Autowired
+    final
     LoveTweetRepository loveTweetRepository;
 
-    @Autowired
+    final
     SavedTweetRepository savedTweetRepository;
 
-    @Autowired
+    final
     CommentRepository commentRepository;
 
-    @Autowired
+    final
     UserRepository userRepository;
 
-    @Autowired
+    final
     TweetRepository tweetRepository;
 
-    @Autowired
+    final
     TweetMapper tweetMapper;
 
-    @Autowired
+    final
     UserMapper userMapper;
+
+    public RepostTweetService(RepostTweetRepository repository, LoveTweetRepository loveTweetRepository, SavedTweetRepository savedTweetRepository, CommentRepository commentRepository, UserRepository userRepository, TweetRepository tweetRepository, TweetMapper tweetMapper, UserMapper userMapper) {
+        this.repository = repository;
+        this.loveTweetRepository = loveTweetRepository;
+        this.savedTweetRepository = savedTweetRepository;
+        this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
+        this.tweetRepository = tweetRepository;
+        this.tweetMapper = tweetMapper;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public boolean repost(String userName, String tweetId) {

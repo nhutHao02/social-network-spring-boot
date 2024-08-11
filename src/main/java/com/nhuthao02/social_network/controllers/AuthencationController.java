@@ -14,7 +14,6 @@ import com.nhuthao02.social_network.utils.ResponseCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +22,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/api/v1/auth")
 public class AuthencationController {
-    @Autowired
+    final
     IUserService userService;
 
-    @Autowired
+    final
     JwtToken jwtToken;
+
+    public AuthencationController(IUserService userService, JwtToken jwtToken) {
+        this.userService = userService;
+        this.jwtToken = jwtToken;
+    }
 
     @PostMapping(value = "/sign-up")
     public ResponseEntity<ApiResponse> create(@RequestBody UserCreationRequest request) {

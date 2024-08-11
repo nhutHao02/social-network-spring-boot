@@ -11,7 +11,6 @@ import com.nhuthao02.social_network.utils.ResponseCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +21,16 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/v1/follow")
 public class FollowController {
-    @Autowired
+    final
     IFollowService service;
 
-    @Autowired
+    final
     JwtToken jwtToken;
+
+    public FollowController(IFollowService service, JwtToken jwtToken) {
+        this.service = service;
+        this.jwtToken = jwtToken;
+    }
 
     @PostMapping(value = "/add")
     public ResponseEntity<ApiResponse> add(@RequestBody FollowRequest request, HttpServletRequest servletRequest) {

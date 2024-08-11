@@ -11,7 +11,6 @@ import com.nhuthao02.social_network.utils.ResponseCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +19,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/api/v1/notification")
 public class NotificationController {
-    @Autowired
+    final
     INotificationService service;
 
-    @Autowired
+    final
     JwtToken jwtToken;
+
+    public NotificationController(INotificationService service, JwtToken jwtToken) {
+        this.service = service;
+        this.jwtToken = jwtToken;
+    }
 
     @GetMapping(value = "/get/{id}")
     public ResponseEntity<ApiResponse> get(@PathVariable String id,

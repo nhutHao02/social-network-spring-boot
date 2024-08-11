@@ -12,7 +12,6 @@ import com.nhuthao02.social_network.repositories.UserRepository;
 import com.nhuthao02.social_network.services.INotificationService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -22,14 +21,20 @@ import java.util.List;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationService implements INotificationService {
-    @Autowired
+    final
     NotificationRepository repository;
 
-    @Autowired
+    final
     UserRepository userRepository;
 
-    @Autowired
+    final
     NotificationMapper mapper;
+
+    public NotificationService(NotificationRepository repository, UserRepository userRepository, NotificationMapper mapper) {
+        this.repository = repository;
+        this.userRepository = userRepository;
+        this.mapper = mapper;
+    }
 
     @Override
     public List<NotificationResponse> get(String id, Integer page, Integer limit) {

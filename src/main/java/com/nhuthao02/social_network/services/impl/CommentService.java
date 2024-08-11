@@ -15,7 +15,6 @@ import com.nhuthao02.social_network.repositories.UserRepository;
 import com.nhuthao02.social_network.services.ICommentService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,20 +24,28 @@ import java.util.List;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentService implements ICommentService {
-    @Autowired
+    final
     CommentRepository repository;
 
-    @Autowired
+    final
     TweetRepository tweetRepository;
 
-    @Autowired
+    final
     UserRepository userRepository;
 
-    @Autowired
+    final
     CommentMapper mapper;
 
-    @Autowired
+    final
     UserMapper userMapper;
+
+    public CommentService(CommentRepository repository, TweetRepository tweetRepository, UserRepository userRepository, CommentMapper mapper, UserMapper userMapper) {
+        this.repository = repository;
+        this.tweetRepository = tweetRepository;
+        this.userRepository = userRepository;
+        this.mapper = mapper;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public boolean addComment(AddCommentRequest request) {

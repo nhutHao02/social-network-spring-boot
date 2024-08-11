@@ -10,7 +10,6 @@ import com.nhuthao02.social_network.utils.ResponseCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +20,16 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/v1/tweet-saved")
 public class TweetSavedController {
-    @Autowired
+    final
     ISavedTweetService service;
 
-    @Autowired
+    final
     JwtToken jwtToken;
+
+    public TweetSavedController(ISavedTweetService service, JwtToken jwtToken) {
+        this.service = service;
+        this.jwtToken = jwtToken;
+    }
 
     @PostMapping(value = "save")
     public ResponseEntity<ApiResponse> repost(@RequestParam(name = "userName") String userName, @RequestParam(name = "tweetId") String tweetId, HttpServletRequest servletRequest) {
