@@ -10,7 +10,6 @@ import com.nhuthao02.social_network.utils.ResponseCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +20,16 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/v1/tweet-repost")
 public class TweetRepostedController {
-    @Autowired
+    final
     IRepostTweetService service;
 
-    @Autowired
+    final
     JwtToken jwtToken;
+
+    public TweetRepostedController(IRepostTweetService service, JwtToken jwtToken) {
+        this.service = service;
+        this.jwtToken = jwtToken;
+    }
 
     @PostMapping(value = "repost")
     public ResponseEntity<ApiResponse> repost(@RequestParam(name = "userName") String userName, @RequestParam(name = "tweetId") String tweetId, HttpServletRequest servletRequest) {

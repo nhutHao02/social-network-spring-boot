@@ -13,7 +13,6 @@ import com.nhuthao02.social_network.repositories.UserRepository;
 import com.nhuthao02.social_network.services.IFollowService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,17 +23,24 @@ import java.util.List;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FollowService implements IFollowService {
-    @Autowired
+    final
     FollowRepository repository;
 
-    @Autowired
+    final
     UserRepository userRepository;
 
-    @Autowired
+    final
     FollowMapper mapper;
 
-    @Autowired
+    final
     UserMapper userMapper;
+
+    public FollowService(FollowRepository repository, UserRepository userRepository, FollowMapper mapper, UserMapper userMapper) {
+        this.repository = repository;
+        this.userRepository = userRepository;
+        this.mapper = mapper;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public boolean add(FollowRequest request) {

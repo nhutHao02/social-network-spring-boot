@@ -10,7 +10,6 @@ import com.nhuthao02.social_network.utils.ResponseCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +18,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/api/v1/comment")
 public class CommentController {
-    @Autowired
+    final
     ICommentService service;
 
-    @Autowired
+    final
     JwtToken jwtToken;
+
+    public CommentController(ICommentService service, JwtToken jwtToken) {
+        this.service = service;
+        this.jwtToken = jwtToken;
+    }
 
     @PostMapping(value = "/post")
     public ResponseEntity<ApiResponse> post(@RequestBody AddCommentRequest request, HttpServletRequest servletRequest) {

@@ -11,7 +11,6 @@ import com.nhuthao02.social_network.mapper.TweetMapper;
 import com.nhuthao02.social_network.mapper.UserMapper;
 import com.nhuthao02.social_network.repositories.*;
 import com.nhuthao02.social_network.services.ITweetService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,29 +20,40 @@ import java.util.List;
 
 @Service
 public class TweetService implements ITweetService {
-    @Autowired
+    final
     TweetRepository repository;
 
-    @Autowired
+    final
     SavedTweetRepository savedTweetRepository;
 
-    @Autowired
+    final
     UserRepository userRepository;
 
-    @Autowired
+    final
     LoveTweetRepository loveTweetRepository;
 
-    @Autowired
+    final
     RepostTweetRepository repostTweetRepository;
 
-    @Autowired
+    final
     CommentRepository commentRepository;
 
-    @Autowired
+    final
     TweetMapper tweetMapper;
 
-    @Autowired
+    final
     UserMapper userMapper;
+
+    public TweetService(TweetRepository repository, SavedTweetRepository savedTweetRepository, UserRepository userRepository, LoveTweetRepository loveTweetRepository, RepostTweetRepository repostTweetRepository, CommentRepository commentRepository, TweetMapper tweetMapper, UserMapper userMapper) {
+        this.repository = repository;
+        this.savedTweetRepository = savedTweetRepository;
+        this.userRepository = userRepository;
+        this.loveTweetRepository = loveTweetRepository;
+        this.repostTweetRepository = repostTweetRepository;
+        this.commentRepository = commentRepository;
+        this.tweetMapper = tweetMapper;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public boolean addTweet(PostTweetRequest request) {

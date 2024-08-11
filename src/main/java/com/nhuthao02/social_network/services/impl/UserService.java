@@ -16,7 +16,6 @@ import com.nhuthao02.social_network.services.IUserService;
 import com.nhuthao02.social_network.utils.JwtToken;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,20 +25,28 @@ import java.util.Optional;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserService implements IUserService {
-    @Autowired
+    final
     UserRepository userRepository;
 
-    @Autowired
+    final
     LocationRepository locationRepository;
 
-    @Autowired
+    final
     UserMapper userMapper;
 
-    @Autowired
+    final
     LocationMapper locationMapper;
 
-    @Autowired
+    final
     JwtToken jwtToken;
+
+    public UserService(UserRepository userRepository, LocationRepository locationRepository, UserMapper userMapper, LocationMapper locationMapper, JwtToken jwtToken) {
+        this.userRepository = userRepository;
+        this.locationRepository = locationRepository;
+        this.userMapper = userMapper;
+        this.locationMapper = locationMapper;
+        this.jwtToken = jwtToken;
+    }
 
     @Override
     public String createUser(UserCreationRequest request) {
