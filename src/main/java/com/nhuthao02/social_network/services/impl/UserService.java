@@ -72,7 +72,7 @@ public class UserService implements IUserService {
             User user = userOptional.get();
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
             if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                return jwtToken.generateToken(request.getUserName());
+                return jwtToken.generateToken(request.getUserName(), user.getId());
             }
         }
         return null;

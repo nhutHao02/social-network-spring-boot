@@ -61,7 +61,9 @@ public class AuthencationController {
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
                     .code(ResponseCode.SUCCESS.getCode())
                     .message(ResponseCode.SUCCESS.getMessage())
-                    .data(UserLoginResponse.builder().token(token).build())
+                    .data(UserLoginResponse.builder()
+                            .userName(request.getUserName())
+                            .token(token).build())
                     .build());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder()
                 .code(ResponseCode.FAILURE.getCode())

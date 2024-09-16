@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -106,9 +107,10 @@ public class TweetsController {
                     .message(ResponseCode.SUCCESS.getMessage())
                     .data(responses)
                     .build());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder()
-                .code(ResponseCode.FAILURE.getCode())
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
+                .code(ResponseCode.SUCCESS.getCode())
                 .message(ResponseCode.FAILURE.getMessage())
+                .data(new ArrayList<>())
                 .build());
     }
 }
