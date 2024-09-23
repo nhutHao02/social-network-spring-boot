@@ -9,7 +9,7 @@ public interface ILoveTweetService {
 
     boolean deleteTweetLoved(String userName, String tweetId);
 
-    List<TweetResponse> getTweetLoved(String userName, Integer page, Integer limit);
+    List<TweetResponse> getTweetLoved(String id, Integer page, Integer limit);
 
 }
 

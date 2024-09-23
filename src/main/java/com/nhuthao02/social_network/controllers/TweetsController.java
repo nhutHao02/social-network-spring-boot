@@ -113,4 +113,25 @@ public class TweetsController {
                 .data(new ArrayList<>())
                 .build());
     }
+
+    @GetMapping(value = "/tweets/{userID}")
+    public ResponseEntity<ApiResponse> getTweetsByUserID(@PathVariable String userID, @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(name = "limit", defaultValue = "10") Integer limit, HttpServletRequest servletRequest) {
+
+        String token = jwtToken.getBearToken(servletRequest);
+
+        if (!jwtToken.verifyToken(token)) throw new AppException(ErrorCode.INVALID_TOKEN);
+
+        List<TweetResponse> responses = tweetService.getTweetsByUserID(userID, page, limit);
+        if (!responses.isEmpty())
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .message(ResponseCode.SUCCESS.getMessage())
+                    .data(responses)
+                    .build());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
+                .code(ResponseCode.SUCCESS.getCode())
+                .message(ResponseCode.FAILURE.getMessage())
+                .data(new ArrayList<>())
+                .build());
+    }
 }

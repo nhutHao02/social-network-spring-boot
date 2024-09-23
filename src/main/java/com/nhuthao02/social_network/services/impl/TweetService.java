@@ -3,6 +3,7 @@ package com.nhuthao02.social_network.services.impl;
 import com.nhuthao02.social_network.dtos.requests.tweet.PostTweetRequest;
 import com.nhuthao02.social_network.dtos.requests.tweet.UpdateTweetRequest;
 import com.nhuthao02.social_network.dtos.responses.tweet.TweetResponse;
+import com.nhuthao02.social_network.entities.SaveTweet;
 import com.nhuthao02.social_network.entities.Tweet;
 import com.nhuthao02.social_network.entities.User;
 import com.nhuthao02.social_network.exception.AppException;
@@ -84,6 +85,31 @@ public class TweetService implements ITweetService {
     public List<TweetResponse> getTweets(Integer page, Integer limit) {
         List<TweetResponse> listRs = new ArrayList<>();
         Page<Tweet> tweets = repository.findAll(PageRequest.of(page, limit));
+        for (Tweet tweet :
+                tweets.getContent()) {
+            // map tweet to tweetResponse
+            TweetResponse tweetResponse = tweetMapper.tweetToTweetResponse(tweet);
+            // map user to userResponse
+            tweetResponse.setUser(userMapper.userToUserTweetResponse(tweet.getUser()));
+            // count LovedTweet
+            tweetResponse.setTotalLove(loveTweetRepository.countByTweet(tweet));
+            // count Saved
+            tweetResponse.setTotalSaved(savedTweetRepository.countByTweet(tweet));
+            // count Repost
+            tweetResponse.setTotalRepost(repostTweetRepository.countByTweet(tweet));
+            // count Comment
+            tweetResponse.setTotalComment(commentRepository.countByTweet(tweet));
+
+            listRs.add(tweetResponse);
+        }
+        return listRs;
+    }
+
+    @Override
+    public List<TweetResponse> getTweetsByUserID(String userID, Integer page, Integer limit) {
+        List<TweetResponse> listRs = new ArrayList<>();
+        User user = userRepository.findById(userID).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Page<Tweet> tweets = repository.findAllByUser(user, PageRequest.of(page, limit));
         for (Tweet tweet :
                 tweets.getContent()) {
             // map tweet to tweetResponse

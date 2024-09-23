@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -71,16 +72,16 @@ public class TweetSavedController {
                 ;
     }
 
-    @GetMapping(value = "/get-saved-tweet")
-    public ResponseEntity<ApiResponse> getRepostTweets(@RequestParam(name = "userName") String userName,
+    @GetMapping(value = "/get-saved-tweet/{id}")
+    public ResponseEntity<ApiResponse> getRepostTweets(@PathVariable String id,
                                                        @RequestParam(name = "page", defaultValue = "0") Integer page,
                                                        @RequestParam(name = "limit", defaultValue = "10") Integer limit,
                                                        HttpServletRequest servletRequest) {
         String token = jwtToken.getBearToken(servletRequest);
 
-        String name = jwtToken.getUsernameFromToken(token);
-        if (!name.equals(userName)) throw new AppException(ErrorCode.INVALID_USER);
-        List<TweetResponse> tweetResponse = service.getSavedTweet(userName, page, limit);
+        if (!jwtToken.verifyToken(token)) throw new AppException(ErrorCode.INVALID_TOKEN);
+
+        List<TweetResponse> tweetResponse = service.getSavedTweet(id, page, limit);
         return !tweetResponse.isEmpty() ?
                 ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
                         .code(ResponseCode.SUCCESS.getCode())
@@ -88,9 +89,10 @@ public class TweetSavedController {
                         .data(tweetResponse)
                         .build())
                 :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder()
-                        .code(ResponseCode.FAILURE.getCode())
-                        .message(ResponseCode.FAILURE.getMessage())
+                ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
+                        .code(ResponseCode.SUCCESS.getCode())
+                        .message(ResponseCode.SUCCESS.getMessage())
+                        .data(new ArrayList<>())
                         .build())
                 ;
     }

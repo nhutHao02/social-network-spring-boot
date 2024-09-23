@@ -9,6 +9,6 @@ public interface IRepostTweetService {
 
     boolean deleteTweetReposted(String userName, String tweetId);
 
-    List<TweetResponse> getRepostTweet(String userName, Integer page, Integer limit);
+    List<TweetResponse> getRepostTweet(String id, Integer page, Integer limit);
 
 }

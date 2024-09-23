@@ -9,5 +9,5 @@ public interface ISavedTweetService {
 
     boolean deleteTweetSaved(String userName, String tweetId);
 
-    List<TweetResponse> getSavedTweet(String userName, Integer page, Integer limit);
+    List<TweetResponse> getSavedTweet(String id, Integer page, Integer limit);
 }

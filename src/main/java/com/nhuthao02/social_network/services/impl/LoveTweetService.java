@@ -79,10 +79,10 @@ public class LoveTweetService implements ILoveTweetService {
     }
 
     @Override
-    public List<TweetResponse> getTweetLoved(String userName, Integer page, Integer limit) {
+    public List<TweetResponse> getTweetLoved(String id, Integer page, Integer limit) {
         List<TweetResponse> listRs = new ArrayList<>();
         // get all saved tweet
-        User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         Page<LoveTweet> loveTweets = repository.findAllByUser(user, PageRequest.of(page, limit));
         for (LoveTweet loveTweet :
                 loveTweets.getContent()) {
