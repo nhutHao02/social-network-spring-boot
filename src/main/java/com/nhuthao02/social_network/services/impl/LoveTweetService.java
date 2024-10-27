@@ -104,4 +104,11 @@ public class LoveTweetService implements ILoveTweetService {
         return listRs;
     }
 
+    @Override
+    public boolean isLovedTweet(String userName, String tweetId) {
+        User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Tweet tweet = tweetRepository.findById(tweetId).orElseThrow(() -> new AppException(ErrorCode.TWEET_NOT_FOUND));
+        return repository.existsLoveTweetByUserAndTweet(user, tweet);
+    }
+
 }

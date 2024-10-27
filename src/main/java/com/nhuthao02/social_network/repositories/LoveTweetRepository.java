@@ -17,4 +17,6 @@ public interface LoveTweetRepository extends JpaRepository<LoveTweet, String> {
     Page<LoveTweet> findAllByUser(User user, Pageable pageable);
 
     Long countByTweet(Tweet tweet);
+
+    boolean existsLoveTweetByUserAndTweet(User user, Tweet tweet);
 }

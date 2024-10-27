@@ -11,5 +11,7 @@ public interface ILoveTweetService {
 
     List<TweetResponse> getTweetLoved(String id, Integer page, Integer limit);
 
+    boolean isLovedTweet(String userName, String tweetId);
+
 }
 

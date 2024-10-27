@@ -97,5 +97,19 @@ public class TweetLovedController {
                 ;
     }
 
+    @GetMapping(value = "/is-loved-tweet")
+    public ResponseEntity<ApiResponse> getTweetLoved(@RequestParam(name = "userName") String userName,
+                                                     @RequestParam(name = "tweetId") String tweetId,
+                                                     HttpServletRequest servletRequest) {
+        String token = jwtToken.getBearToken(servletRequest);
 
+        if (!jwtToken.verifyToken(token)) throw new AppException(ErrorCode.INVALID_TOKEN);
+
+        var result = loveTweetService.isLovedTweet(userName, tweetId);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
+                .code(ResponseCode.SUCCESS.getCode())
+                .message(ResponseCode.SUCCESS.getMessage())
+                .data(result)
+                .build());
+    }
 }
