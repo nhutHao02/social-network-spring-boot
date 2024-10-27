@@ -80,10 +80,10 @@ public class RepostTweetService implements IRepostTweetService {
     }
 
     @Override
-    public List<TweetResponse> getRepostTweet(String userName, Integer page, Integer limit) {
+    public List<TweetResponse> getRepostTweet(String id, Integer page, Integer limit) {
         List<TweetResponse> listRs = new ArrayList<>();
         // get all saved tweet
-        User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         Page<RepostTweet> repostTweets = repository.findAllByUser(user, PageRequest.of(page, limit));
         for (RepostTweet repostTweet :
                 repostTweets.getContent()) {

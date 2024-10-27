@@ -31,13 +31,14 @@ public class JwtToken {
     @Value("${jwt.secret}")
     String secretKey;
 
-    public String generateToken(String userName) {
+    public String generateToken(String userName, String userId) {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(userName)
                 .issuer(issuer)
                 .issueTime(new Date())
+                .claim("id", userId)
 //                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()))
                 .expirationTime(Date.from(LocalDateTime.now().plusMonths(1).atZone(ZoneId.systemDefault()).toInstant()))
                 .build();
@@ -80,6 +81,19 @@ public class JwtToken {
 
             SignedJWT signedJWT = SignedJWT.parse(token);
             return signedJWT.getJWTClaimsSet().getSubject();
+        } catch (ParseException e) {
+            throw new AppException(ErrorCode.INVALID_TOKEN);
+        }
+    }
+
+    public String getIdFromToken(String token) {
+        try {
+            if (!verifyToken(token)) {
+                throw new AppException(ErrorCode.INVALID_TOKEN);
+            }
+
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            return signedJWT.getJWTClaimsSet().getStringClaim("id");
         } catch (ParseException e) {
             throw new AppException(ErrorCode.INVALID_TOKEN);
         }

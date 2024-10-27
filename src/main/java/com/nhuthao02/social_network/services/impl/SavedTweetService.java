@@ -76,10 +76,10 @@ public class SavedTweetService implements ISavedTweetService {
     }
 
     @Override
-    public List<TweetResponse> getSavedTweet(String userName, Integer page, Integer limit) {
+    public List<TweetResponse> getSavedTweet(String id, Integer page, Integer limit) {
         List<TweetResponse> listRs = new ArrayList<>();
         // get all saved tweet
-        User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         Page<SaveTweet> saveTweets = repository.findAllByUser(user, PageRequest.of(page, limit));
         for (SaveTweet saveTweet :
                 saveTweets.getContent()) {

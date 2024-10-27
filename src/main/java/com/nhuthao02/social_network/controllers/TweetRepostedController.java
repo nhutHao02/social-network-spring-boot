@@ -71,16 +71,16 @@ public class TweetRepostedController {
                 ;
     }
 
-    @GetMapping(value = "/get-repost-tweet")
-    public ResponseEntity<ApiResponse> getRepostTweets(@RequestParam(name = "userName") String userName,
+    @GetMapping(value = "/get-repost-tweet/{id}")
+    public ResponseEntity<ApiResponse> getRepostTweets(@PathVariable String id,
                                                        @RequestParam(name = "page", defaultValue = "0") Integer page,
                                                        @RequestParam(name = "limit", defaultValue = "10") Integer limit,
                                                        HttpServletRequest servletRequest) {
         String token = jwtToken.getBearToken(servletRequest);
 
-        String name = jwtToken.getUsernameFromToken(token);
-        if (!name.equals(userName)) throw new AppException(ErrorCode.INVALID_USER);
-        List<TweetResponse> tweetResponse = service.getRepostTweet(userName, page, limit);
+        if (!jwtToken.verifyToken(token)) throw new AppException(ErrorCode.INVALID_TOKEN);
+
+        List<TweetResponse> tweetResponse = service.getRepostTweet(id, page, limit);
         return !tweetResponse.isEmpty() ?
                 ResponseEntity.status(HttpStatus.OK).body(ApiResponse.builder()
                         .code(ResponseCode.SUCCESS.getCode())

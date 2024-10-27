@@ -20,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -65,17 +66,19 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public String login(UserLoginRequest request) {
-
+    public String[] login(UserLoginRequest request) {
+        String[] rs = new String[2];
         Optional<User> userOptional = userRepository.findByUserName(request.getUserName());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
             if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                return jwtToken.generateToken(request.getUserName());
+                rs[0] = user.getId();
+                rs[1] = jwtToken.generateToken(request.getUserName(), user.getId());
+                return rs;
             }
         }
-        return null;
+        return rs;
     }
 
     @Override

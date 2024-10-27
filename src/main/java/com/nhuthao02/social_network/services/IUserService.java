@@ -5,10 +5,12 @@ import com.nhuthao02.social_network.dtos.requests.user.UserLoginRequest;
 import com.nhuthao02.social_network.dtos.requests.user.UserUpdateRequest;
 import com.nhuthao02.social_network.dtos.responses.user.UserInfoResponse;
 
+import java.util.Map;
+
 public interface IUserService {
     String createUser(UserCreationRequest request);
 
-    String login(UserLoginRequest request);
+    String[] login(UserLoginRequest request);
 
     boolean update(String userName, UserUpdateRequest request);
 

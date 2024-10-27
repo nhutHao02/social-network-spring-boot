@@ -14,4 +14,6 @@ public interface ITweetService {
     boolean deleteTweet(String id);
 
     List<TweetResponse> getTweets(Integer page, Integer limit);
+
+    List<TweetResponse> getTweetsByUserID(String userID, Integer page, Integer limit);
 }
