@@ -25,7 +25,9 @@ public class SecurityConfig {
 
     private final String[] publicEndpoint = {
             "/api/v1/auth/log-in",
-            "/api/v1/auth/sign-up"
+            "/api/v1/auth/sign-up",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
     };
 
     @Bean

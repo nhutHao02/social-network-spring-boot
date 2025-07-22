@@ -11,6 +11,12 @@ import com.nhuthao02.social_network.services.IUserService;
 import com.nhuthao02.social_network.utils.ApiResponse;
 import com.nhuthao02.social_network.utils.JwtToken;
 import com.nhuthao02.social_network.utils.ResponseCode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RestController
 @RequestMapping(path = "/api/v1/auth")
+@Tag (name = "Authencation", description = "APIs related to authencation")
 public class AuthencationController {
     final
     IUserService userService;
@@ -33,6 +40,30 @@ public class AuthencationController {
         this.jwtToken = jwtToken;
     }
 
+    @Operation(
+            summary = "Sign up a new user",
+            description = "Sign up a new user"
+    )
+    @ApiResponses(
+            value = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "404",
+                            description = "Bad request",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    )
+            }
+    )
     @PostMapping(value = "/sign-up")
     public ResponseEntity<ApiResponse> create(@RequestBody UserCreationRequest request) {
         String result = userService.createUser(request);
@@ -69,6 +100,7 @@ public class AuthencationController {
                 .build());
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @PutMapping(value = "/update/{userName}")
     public ResponseEntity<ApiResponse> update(@PathVariable String userName, @RequestBody UserUpdateRequest request, HttpServletRequest servletRequest) {
 
