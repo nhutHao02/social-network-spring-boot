@@ -12,6 +12,7 @@ import com.nhuthao02.social_network.utils.ApiResponse;
 import com.nhuthao02.social_network.utils.JwtToken;
 import com.nhuthao02.social_network.utils.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -85,6 +86,30 @@ public class AuthencationController {
                 .build());
     }
 
+    @Operation(
+            summary = "Log in",
+            description = "Log in to get token"
+    )
+    @ApiResponses(
+            value = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "404",
+                            description = "Bad request",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    )
+            }
+    )
     @PostMapping(value = "/log-in")
     public ResponseEntity<ApiResponse> login(@RequestBody UserLoginRequest request) {
         String token = userService.login(request);
@@ -100,9 +125,34 @@ public class AuthencationController {
                 .build());
     }
 
+    @Operation(
+            summary = "Update user information",
+            description = "Update user information"
+    )
+    @ApiResponses(
+            value = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "404",
+                            description = "Bad request",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    )
+            }
+    )
+
     @SecurityRequirement(name = "bearerAuth")
     @PutMapping(value = "/update/{userName}")
-    public ResponseEntity<ApiResponse> update(@PathVariable String userName, @RequestBody UserUpdateRequest request, HttpServletRequest servletRequest) {
+    public ResponseEntity<ApiResponse> update(@Parameter(description = "Update user information by user name") @PathVariable String userName, @RequestBody UserUpdateRequest request, HttpServletRequest servletRequest) {
 
         String token = jwtToken.getBearToken(servletRequest);
 
@@ -126,6 +176,30 @@ public class AuthencationController {
                         .build());
     }
 
+    @Operation(
+            summary = "Get user information",
+            description = "Get user information"
+    )
+    @ApiResponses(
+            value = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "404",
+                            description = "Bad request",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    )
+            }
+    )
     @GetMapping(value = "info/{id}")
     public ResponseEntity<ApiResponse> getInfoById(@PathVariable String id, HttpServletRequest servletRequest) {
         String token = jwtToken.getBearToken(servletRequest);
@@ -145,6 +219,7 @@ public class AuthencationController {
                         .build());
 
     }
+
 
     @GetMapping(value = "info")
     public ResponseEntity<ApiResponse> getInfoById(HttpServletRequest servletRequest) {

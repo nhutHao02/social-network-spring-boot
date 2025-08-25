@@ -7,6 +7,12 @@ import com.nhuthao02.social_network.services.ICommentService;
 import com.nhuthao02.social_network.utils.ApiResponse;
 import com.nhuthao02.social_network.utils.JwtToken;
 import com.nhuthao02.social_network.utils.ResponseCode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -17,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RestController
 @RequestMapping(path = "/api/v1/comment")
+@Tag(name = "Comment", description = "APis realated to comment")
 public class CommentController {
     final
     ICommentService service;
@@ -29,6 +36,31 @@ public class CommentController {
         this.jwtToken = jwtToken;
     }
 
+    @Operation(
+            summary  = "Add comment to tweet",
+            description = "Add new comment to tweet"
+    )
+    @ApiResponses(
+            value = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "404",
+                            description = "Bad request",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    )
+            }
+    )
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/post")
     public ResponseEntity<ApiResponse> post(@RequestBody AddCommentRequest request, HttpServletRequest servletRequest) {
         String token = jwtToken.getBearToken(servletRequest);
@@ -50,6 +82,31 @@ public class CommentController {
                 ;
     }
 
+    @Operation(
+            summary  = "Update comment on tweet",
+            description = "Update comment on tweet"
+    )
+    @ApiResponses(
+            value = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "404",
+                            description = "Bad request",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    )
+            }
+    )
+    @SecurityRequirement(name = "bearerAuth")
     @PutMapping(value = "/update-comment/{commentId}")
     public ResponseEntity<ApiResponse> update(@PathVariable String commentId, @RequestBody AddCommentRequest request, HttpServletRequest servletRequest) {
         String token = jwtToken.getBearToken(servletRequest);
@@ -71,6 +128,31 @@ public class CommentController {
                 ;
     }
 
+    @Operation(
+            summary  = "Delete comment on tweet",
+            description = "Delete comment on tweet"
+    )
+    @ApiResponses(
+            value = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "404",
+                            description = "Bad request",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    )
+            }
+    )
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping(value = "/delete/{commentId}")
     public ResponseEntity<ApiResponse> update(@PathVariable String commentId, HttpServletRequest servletRequest) {
         String token = jwtToken.getBearToken(servletRequest);
@@ -92,6 +174,31 @@ public class CommentController {
                 ;
     }
 
+    @Operation(
+            summary  = "Get comments by tweetId",
+            description = "Get comments by tweetId"
+    )
+    @ApiResponses(
+            value = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "404",
+                            description = "Bad request",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class)
+                            )
+                    )
+            }
+    )
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/get-comments/{tweetId}")
     public ResponseEntity<ApiResponse> getComments(@PathVariable String tweetId,
                                                    @RequestParam(name = "page", defaultValue = "0") Integer page,
