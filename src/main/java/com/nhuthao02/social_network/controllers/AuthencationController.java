@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
@@ -152,7 +153,11 @@ public class AuthencationController {
 
     @SecurityRequirement(name = "bearerAuth")
     @PutMapping(value = "/update/{userName}")
-    public ResponseEntity<ApiResponse> update(@Parameter(description = "Update user information by user name") @PathVariable String userName, @RequestBody UserUpdateRequest request, HttpServletRequest servletRequest) {
+    public ResponseEntity<ApiResponse> update(
+            @Parameter(description = "Update user information by user name")
+            @PathVariable String userName,
+            @Valid @RequestBody UserUpdateRequest request,
+            HttpServletRequest servletRequest) {
 
         String token = jwtToken.getBearToken(servletRequest);
 
