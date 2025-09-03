@@ -4,16 +4,17 @@ import com.nhuthao02.social_network.entities.baseInterface.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @Entity(name = "users")
-@Builder
+@SuperBuilder
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User extends BaseEntity {
     @NotNull

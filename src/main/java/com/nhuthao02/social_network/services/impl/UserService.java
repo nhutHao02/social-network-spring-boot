@@ -60,7 +60,7 @@ public class UserService implements IUserService {
         locationRepository.save(location);
         user.setLocation(location);
 
-        userRepository.save(user);
+        user = userRepository.save(user);
         return user.getId();
     }
 
@@ -75,7 +75,7 @@ public class UserService implements IUserService {
                 return jwtToken.generateToken(request.getUserName());
             }
         }
-        return null;
+        return "";
     }
 
     @Override
